@@ -1,0 +1,22 @@
+{
+  "name": "slack-chat-bot",
+  "version": "1.0.0",
+  "description": "My slack chat bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielsoro/slack-chat-bot.git"
+  },
+  "author": "Daniel Cunha (soro) <dcunha@tomitribe.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danielsoro/slack-chat-bot/issues"
+  },
+  "homepage": "https://github.com/danielsoro/slack-chat-bot#readme",
+  "dependencies": {
+    "commander": "^2.11.0"
+  }
+}
