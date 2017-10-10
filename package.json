@@ -4,7 +4,7 @@
   "description": "My slack chat bot",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/danielsoro/slack-chat-bot#readme",
   "dependencies": {
-    "commander": "^2.11.0"
+    "commander": "^2.11.0",
+    "mocha": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2"
