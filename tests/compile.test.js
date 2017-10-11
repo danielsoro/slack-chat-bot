@@ -8,6 +8,6 @@ describe('Compile', function() {
     });
 
     it ('compile() should return status equal 0 if build is ok', function() {
-        expect(compileObject.compile(`${__dirname}/projects/mvn-error/fail`).status).to.eq(0);
+        expect(compileObject.compile(`${__dirname}/projects/mvn-ok/ok`).status).to.eq(0);
     })
 });

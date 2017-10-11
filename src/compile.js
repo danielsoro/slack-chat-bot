@@ -1,7 +1,4 @@
 const { spawnSync } = require('child_process');
-let _default = {
-    status: 0
-};
 
 module.exports = {
     compile: function (cwd) {
