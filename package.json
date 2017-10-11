@@ -2,7 +2,6 @@
   "name": "slack-chat-bot",
   "version": "1.0.0",
   "description": "My slack chat bot",
-  "main": "app.js",
   "scripts": {
     "test": "mocha tests --recursive -t 50000"
   },
