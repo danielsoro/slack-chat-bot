@@ -1,18 +1,9 @@
-const { spawnSync } = require('child_process');
+'use strict';
+
+const { spawn } = require('child_process');
 
 module.exports = {
-    run: function (env, command, cwd) {
-        let spawnResult = spawnSync(`environment=${env}`, ['./action.tsm', command], { cwd: cwd });
-        if (spawnResult.error) {
-            console.error('stderr', spawnResult.stderr);
-            throw spawnResult.error;
-        }
-
-        let result = {
-            status: spawnResult.status,
-            stderr: spawnResult.stderr,
-            stdout: spawnResult.stdout
-        };
-        return result;
+    runAction: function (env, command, cwd) {
+        return spawn(`environment=${env}`, ['./action.tsm', command], { cwd: cwd });
     }
 };

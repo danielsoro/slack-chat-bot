@@ -1,29 +1,27 @@
-const { spawnSync } = require('child_process');
+'use strict';
+
+const { spawn, spawnSync } = require('child_process');
 const uuidv1 = require('uuid/v1');
 
 module.exports = {
-    clone: function (url) {
+    clone: function (user, password, project) {
         // Create temp folder
         let folderName = uuidv1();
         let mkdirResult = spawnSync('mkdir', ['-p', folderName], { cwd: '/tmp/' });
-        if (mkdirResult.error) {
-            console.error('stderr', mkdirResult.stderr)
-            throw mkdirResult.error;
-        }
+        let gitResult;
+        let gitTmpFolder = `/tmp/${folderName}`;
 
-        let gitTmpFolder = `/tmp/${folderName}`
-        let gitResult = spawnSync('git', ['clone', url], { cwd: gitTmpFolder });
-        if (gitResult.error) {
-            console.error('stderr', gitResult.stderr);
-            throw gitResult.error;
+        if (mkdirResult.status == 0) {
+            let url = `git@github.com:${user}/${project}.git`;
+            gitResult = spawn('git', ['clone', url], { cwd: gitTmpFolder });
         }
 
         let result = {
-            status: gitResult.status,
-            stderr: gitResult.stderr,
-            stdout: gitResult.stdout,
-            folder: gitTmpFolder
+            folder: gitTmpFolder,
+            projectName: project,
+            gitResult: gitResult
         };
+
         return result;
     }
 };

@@ -1,18 +1,9 @@
-const { spawnSync } = require('child_process');
+'use strict';
+
+const { spawn } = require('child_process');
 
 module.exports = {
-    compile: function (cwd) {
-        let spawnResult = spawnSync('mvn', ['clean', 'install'], { cwd: cwd });
-        if (spawnResult.error) {
-            console.error('stderr', spawnResult.stderr);
-            throw spawnResult.error;
-        }
-
-        let result = {
-            status: spawnResult.status,
-            stderr: spawnResult.stderr,
-            stdout: spawnResult.stdout
-        };
-        return result;
+    compile: function (cwd, options) {
+        return spawn('mvn', options, { cwd: cwd });
     }
 };
