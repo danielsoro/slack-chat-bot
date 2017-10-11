@@ -12,7 +12,7 @@ module.exports = {
         let gitTmpFolder = `/tmp/${folderName}`;
 
         if (mkdirResult.status == 0) {
-            let url = `git@github.com:${user}/${project}.git`;
+            let url = `https://${user}:${password}@github.com/${user}/${project}.git`;
             gitResult = spawn('git', ['clone', url], { cwd: gitTmpFolder });
         }
 

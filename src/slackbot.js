@@ -5,6 +5,7 @@ const compileObject = require('./compile');
 const gitObject = require('./git');
 const tsm = require('./tsm');
 const killall = require('./killall');
+const rm = require('./rm');
 
 const controller = Botkit.slackbot({
     debug: false
@@ -29,7 +30,7 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
     killall.kill('java');
     updating = true;
 
-    let gitCloneResult = gitObject.clone('danielsoro', 'dynamic-inject');
+    let gitCloneResult = gitObject.clone(process.env.SLACK_BOT_USERNAME, process.env.SLACK_BOT_PASSWORD, process.env.SLACK_BOT_PROJECT);
 
     gitCloneResult.gitResult.on('exit', (code, signal) => {
         if (code != 0) {
@@ -41,15 +42,25 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
         let compileResult = compileObject.compile(`${gitCloneResult.folder}/${gitCloneResult.projectName}`, ['clean', 'install', '-DskipTests', '-Dsettings.offline=true']);
         
         compileResult.on('exit', (code, signal) => {
+            rm.remove(gitCloneResult.folder);
             if (code != 0) {
                 bot.reply(message, `<@${message.user}>, ${erroMsg}`);
                 updating = false;
                 return;
-            }
+            }            
 
-            bot.reply(message, `<@${message.user}> qa-master updated. :)`);
-            updating = false;
-            return;
+            let tsmResult = tsm.runAction('qa-tes', 'deployAll', process.env.SLACK_TSM_PATH);
+            tsmResult.on('exit', (code, signal) => {
+                if (code != 0) {
+                    bot.reply(message, `<@${message.user}>, ${erroMsg}`);
+                    updating = false;
+                    return;
+                }
+
+                bot.reply(message, `<@${message.user}> qa-master updated. :)`);
+                updating = false;
+                return;
+            });
         });
     });
 });

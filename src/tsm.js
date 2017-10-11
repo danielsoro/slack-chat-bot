@@ -1,9 +1,9 @@
 'use strict';
 
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 
 module.exports = {
     runAction: function (env, command, cwd) {
-        return spawn(`environment=${env}`, ['./action.tsm', command], { cwd: cwd });
+        return exec(`environment=${env} ./action.tsm ${command}`, {cwd: cwd});
     }
 };
