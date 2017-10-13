@@ -29,41 +29,45 @@ controller.spawn({
 }).startRTM();
 
 controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
+    try {
+        if (updating) {
+            bot.reply(message, `<@${message.user}>, I'm doing it exactly now, process still running. Keep calm and drink a water.`);
+            return;
+        }
 
-    if (updating) {
-        bot.reply(message, `<@${message.user}>, I'm doing it exactly now, process still running. Keep calm and drink a water.`);
-        return;
-    }
+        bot.reply(message, `<@${message.user}> Sure.. give me few minutes I'm updating it.`);
 
-    bot.reply(message, `<@${message.user}> Sure.. give me few minutes I'm updating it.`);
+        killall.kill('java');
+        ssh.sshCommand(process.env.SLACK_BOT_SSH_KEY, process.env.SLACK_BOT_SSH_USER, process.env.SLACK_BOT_SSH_SERVER, 'killall java');
+        updating = true;
 
-    killall.kill('java');
-    ssh.sshCommand(process.env.SLACK_BOT_SSH_KEY, process.env.SLACK_BOT_SSH_USER, process.env.SLACK_BOT_SSH_SERVER, 'killall java');
-    updating = true;
+        let gitCloneResult = git.clone(process.env.SLACK_BOT_USERNAME, process.env.SLACK_BOT_PASSWORD, process.env.SLACK_BOT_USER_REPO, process.env.SLACK_BOT_PROJECT);
 
-    let gitCloneResult = git.clone(process.env.SLACK_BOT_USERNAME, process.env.SLACK_BOT_PASSWORD, process.env.SLACK_BOT_USER_REPO, process.env.SLACK_BOT_PROJECT);
+        //const { code, signal } = await defineOnExit(gitCloneResult)
 
-    //const { code, signal } = await defineOnExit(gitCloneResult)
+        gitCloneResult.gitResult.on('exit', (code, signal) => {
+            if (errorOnCallBack(bot, message, code)) return;
 
-    gitCloneResult.gitResult.on('exit', (code, signal) => {
-        if (errorOnCallBack(bot, message, code)) return;
+            let compileResult = mvn.run(`${gitCloneResult.folder}/${gitCloneResult.projectName}`, ['clean', 'install', '-DskipTests', '-Dsettings.offline=true']);
 
-        let compileResult = mvn.run(`${gitCloneResult.folder}/${gitCloneResult.projectName}`, ['clean', 'install', '-DskipTests', '-Dsettings.offline=true']);
+            compileResult.on('exit', (code, signal) => {
+                if (errorOnCallBack(bot, message, code)) {
+                    rm.remove(gitCloneResult.folder)
+                    return;
+                }
 
-        compileResult.on('exit', (code, signal) => {
-            if (errorOnCallBack(bot, message, code)) {
-                rm.remove(gitCloneResult.folder)
-                return;
-            }
+                let tsmResult = tsm.runAction('qa-tag', 'deployall', process.env.SLACK_TSM_PATH);
+                tsmResult.on('exit', (code, signal) => {
+                    if (errorOnCallBack(bot, message, code)) return;
 
-            let tsmResult = tsm.runAction('qa-tag', 'deployAll', process.env.SLACK_TSM_PATH);
-            tsmResult.on('exit', (code, signal) => {
-                if (errorOnCallBack(bot, message, code)) return;
-
-                bot.reply(message, `<@${message.user}> qa-master updated. :)`);
-                updating = false;
-                return;
+                    bot.reply(message, `<@${message.user}> qa-master updated. :)`);
+                    updating = false;
+                    return;
+                });
             });
         });
-    });
+    } catch (err) {
+        console.log(err);
+        updating = false;
+    }
 }); 
