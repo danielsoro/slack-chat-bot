@@ -49,18 +49,19 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
                 return;
             }            
 
-            let tsmResult = tsm.runAction('qa-tes', 'deployAll', process.env.SLACK_TSM_PATH);
-            tsmResult.on('exit', (code, signal) => {
-                if (code != 0) {
-                    bot.reply(message, `<@${message.user}>, ${erroMsg}`);
-                    updating = false;
-                    return;
-                }
+            bot.reply(message, `<@${message.user}> qa-master updated. :)`);
+            updating = false;
+            return;
 
-                bot.reply(message, `<@${message.user}> qa-master updated. :)`);
-                updating = false;
-                return;
-            });
+            //let tsmResult = tsm.runAction('qa-tes', 'deployAll', process.env.SLACK_TSM_PATH);
+            //tsmResult.on('exit', (code, signal) => {
+            //    if (code != 0) {
+            //        bot.reply(message, `<@${message.user}>, ${erroMsg}`);
+            //        updating = false;
+            //        return;
+            //    }
+            //});
+
         });
     });
 });

@@ -16,6 +16,10 @@ module.exports = {
             gitResult = spawn('git', ['clone', url], { cwd: gitTmpFolder });
         }
 
+        gitResult.stdout.on('data', (data) => {
+            console.log(`${data}`);
+        });
+
         let result = {
             folder: gitTmpFolder,
             projectName: project,
