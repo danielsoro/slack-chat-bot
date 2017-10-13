@@ -51,8 +51,8 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
             let compileResult = mvn.run(`${gitCloneResult.folder}/${gitCloneResult.projectName}`, ['clean', 'install', '-DskipTests', '-Dsettings.offline=true']);
 
             compileResult.on('exit', (code, signal) => {
+                rm.remove(gitCloneResult.folder)
                 if (errorOnCallBack(bot, message, code)) {
-                    rm.remove(gitCloneResult.folder)
                     return;
                 }
 
