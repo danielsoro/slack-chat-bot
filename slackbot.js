@@ -52,13 +52,13 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
         compileResult.on('exit', (code, signal) => {
             if (errorOnCallBack(bot, message, code, rm.remove(gitCloneResult.folder))) return;
 
-            bot.reply(message, `<@${message.user}> qa-master updated. :)`);
-            updating = false;
-            return;
-
             let tsmResult = tsm.runAction('qa-tag', 'deployAll', process.env.SLACK_TSM_PATH);
             tsmResult.on('exit', (code, signal) => {
                 if (errorOnCallBack(bot, message, code)) return;
+                
+                bot.reply(message, `<@${message.user}> qa-master updated. :)`);
+                updating = false;
+                return;
             });
         });
     });
