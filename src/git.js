@@ -4,7 +4,7 @@ const { spawn, spawnSync } = require('child_process');
 const uuidv1 = require('uuid/v1');
 
 module.exports = {
-    clone: function (user, password, project) {
+    clone: function (user, password, userRepo, project) {
         // Create temp folder
         let folderName = uuidv1();
         let mkdirResult = spawnSync('mkdir', ['-p', folderName], { cwd: '/tmp/' });

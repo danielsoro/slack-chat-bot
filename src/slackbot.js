@@ -30,7 +30,7 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
     killall.kill('java');
     updating = true;
 
-    let gitCloneResult = gitObject.clone(process.env.SLACK_BOT_USERNAME, process.env.SLACK_BOT_PASSWORD, process.env.SLACK_BOT_PROJECT);
+    let gitCloneResult = gitObject.clone(process.env.SLACK_BOT_USERNAME, process.env.SLACK_BOT_PASSWORD, process.env.SLACK_BOT_USER_REPO, process.env.SLACK_BOT_PROJECT);
 
     gitCloneResult.gitResult.on('exit', (code, signal) => {
         if (code != 0) {
