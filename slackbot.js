@@ -1,12 +1,12 @@
 'use strict';
 
 const Botkit = require('botkit');
-const mvn = require('./mvn');
-const git = require('./git');
-const tsm = require('./tsm');
-const killall = require('./killall');
-const rm = require('./rm');
-const ssh = require('./ssh');
+const mvn = require('./lib/mvn');
+const git = require('./lib/git');
+const tsm = require('./lib/tsm');
+const killall = require('./lib/killall');
+const rm = require('./lib/rm');
+const ssh = require('./lib/ssh');
 
 const controller = Botkit.slackbot({
     debug: false
