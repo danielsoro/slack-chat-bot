@@ -13,5 +13,5 @@ controller.spawn({
 
 
 controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'mention'], async (bot, message) => {
-    main.main(bot, message);
+    main.main(bot, message); 
 }); 
