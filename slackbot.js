@@ -17,6 +17,6 @@ controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'm
     qa.main(bot, message); 
 }); 
 
-controller.hears(['^update standalone-env$'], ['direct_message', 'direct_mention', 'mention'], async (bot, message) => {
-    standalone.main(bot, message);
-}); 
+// controller.hears(['^update standalone-env$'], ['direct_message', 'direct_mention', 'mention'], async (bot, message) => {
+//     standalone.main(bot, message);
+// }); 
