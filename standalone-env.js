@@ -16,14 +16,7 @@ const errorOnCallBack = (bot, message, err) => {
 
 const execCommand = exec => new Promise(cb => {
     let execCommandResult = exec.run('sh ec2EnvBuilder-snaptshot.sh', process.env.SLACK_BOT_STANDALONE_PATH);
-
-    execCommandResult.on('exit', (code, signal) => {
-        return cb({ execCommandResult, code, signal });
-    });
-
-    execCommandResult.on('error', (err) => {
-        return cb({ err });
-    })
+    return cb(execCommandResult);
 });
 
 module.exports.main = async (bot, message) => {
@@ -41,8 +34,8 @@ module.exports.main = async (bot, message) => {
             process.env.SLACK_BOT_STANDALONE_SERVER,
             'killall java');
 
-        const { execCommandResult, err: errTsm } = await execCommand(exec);
-        if (errorOnCallBack(bot, message, errTsm)) return;
+        const { execCommandResult } = await execCommand(exec);
+        if (errorOnCallBack(bot, message, execCommandResult.err)) return;
 
         bot.reply(message, `<@${message.user}> standalone env updated. :)`);
         updating = false;
