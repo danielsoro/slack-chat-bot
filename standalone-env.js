@@ -34,7 +34,7 @@ module.exports.main = async (bot, message) => {
             process.env.SLACK_BOT_STANDALONE_SERVER,
             'killall java');
 
-        const { execCommandResult } = await execCommand(exec);
+        const execCommandResult = await execCommand(exec);
         if (errorOnCallBack(bot, message, execCommandResult.err)) return;
 
         bot.reply(message, `<@${message.user}> standalone env updated. :)`);
