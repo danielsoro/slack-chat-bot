@@ -1,7 +1,8 @@
 'use strict';
 
 const Botkit = require('botkit');
-const main = require('./main');
+const qa = require('./qa-env');
+const standalone = require('./standalone-env');
 
 const controller = Botkit.slackbot({
     debug: false
@@ -13,5 +14,9 @@ controller.spawn({
 
 
 controller.hears(['^update qa-master$'], ['direct_message', 'direct_mention', 'mention'], async (bot, message) => {
-    main.main(bot, message); 
+    qa.main(bot, message); 
+}); 
+
+controller.hears(['^update standalone-env$'], ['direct_message', 'direct_mention', 'mention'], async (bot, message) => {
+    standalone.main(bot, message);
 }); 
