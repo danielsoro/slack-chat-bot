@@ -15,7 +15,7 @@ const errorOnCallBack = (bot, message, err) => {
 };
 
 const execCommand = exec => new Promise(cb => {
-    let execCommandResult = exec.run('sh ec2EnvBuilder-snaptshot.sh', process.env.SLACK_BOT_STANDALONE_PATH);
+    let execCommandResult = exec.run('./ec2EnvBuilder-snaptshot.sh', ['all'], process.env.SLACK_BOT_STANDALONE_PATH);
     return cb(execCommandResult);
 });
 
